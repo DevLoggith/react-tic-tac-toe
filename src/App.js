@@ -61,6 +61,7 @@ function Board({ xIsNext, squares, onPlay }) {
 export default function Game() {
 	const [history, setHistory] = useState([Array(9).fill(null)]);
 	const [currentMove, setCurrentMove] = useState(0);
+	const [isAscending, setIsAscending] = useState(true);
 	const xIsNext = currentMove % 2 === 0;
 	const currentSquares = history[currentMove];
 
@@ -95,13 +96,19 @@ export default function Game() {
 		);
 	});
 
+	const sortButtonText = isAscending ? "Sort moves: Ascending" : "Sort moves: Descending";
+	const sortedMoves = isAscending
+		? moves.toSorted((a, b) => Number(a.key) - Number(b.key))
+		: moves.toSorted((a, b) => Number(b.key) - Number(a.key));
+
 	return (
 		<div className="game">
 			<div className="game-board">
 				<Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
 			</div>
 			<div className="game-info">
-				<ol>{moves}</ol>
+				<button onClick={() => setIsAscending(!isAscending)}>{sortButtonText}</button>
+				<ol>{sortedMoves}</ol>
 			</div>
 		</div>
 	);
