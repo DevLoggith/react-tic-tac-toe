@@ -111,7 +111,7 @@ export default function Game() {
 			</div>
 			<div className="game-info">
 				<button onClick={() => setIsAscending(!isAscending)}>{sortButtonText}</button>
-				<ol>{sortedMoves}</ol>
+				<ul>{sortedMoves}</ul>
 			</div>
 		</div>
 	);
