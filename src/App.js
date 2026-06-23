@@ -9,7 +9,7 @@ function Square({ className, value, onSquareClick }) {
 }
 
 function Board({ xIsNext, squares, onPlay }) {
-	function handleClick(i) {
+	function handleClick(i, coordinate) {
 		if (calculateWinner(squares).winner || squares[i]) {
 			return;
 		}
@@ -21,7 +21,7 @@ function Board({ xIsNext, squares, onPlay }) {
 			nextSquares[i] = "O";
 		}
 
-		onPlay(nextSquares);
+		onPlay(nextSquares, coordinate);
 	}
 
 	const { winner, winningSquares } = calculateWinner(squares);
@@ -40,12 +40,13 @@ function Board({ xIsNext, squares, onPlay }) {
 			<div key={i} className="board-row">
 				{squares.slice(i * 3, i * 3 + 3).map((square, index) => {
 					const globalIndex = i * 3 + index;
+					const coordinate = [i + 1, index + 1];
 					return (
 						<Square
 							key={globalIndex}
 							className={winningSquares && winningSquares.includes(globalIndex) ? "winning-squares" : ""}
 							value={squares[globalIndex]}
-							onSquareClick={() => handleClick(globalIndex)}
+							onSquareClick={() => handleClick(globalIndex, coordinate)}
 						/>
 					);
 				})}
@@ -63,14 +64,18 @@ function Board({ xIsNext, squares, onPlay }) {
 
 export default function Game() {
 	const [history, setHistory] = useState([Array(9).fill(null)]);
+	const [coordinates, setCoordinates] = useState([null]);
 	const [currentMove, setCurrentMove] = useState(0);
 	const [isAscending, setIsAscending] = useState(true);
 	const xIsNext = currentMove % 2 === 0;
 	const currentSquares = history[currentMove];
 
-	function handlePlay(nextSquares) {
+	function handlePlay(nextSquares, coordinate) {
 		const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+		const nextCoordinate = [...coordinates.slice(0, currentMove + 1), coordinate];
+
 		setHistory(nextHistory);
+		setCoordinates(nextCoordinate);
 		setCurrentMove(nextHistory.length - 1);
 	}
 
@@ -82,9 +87,13 @@ export default function Game() {
 		let description;
 
 		if (move === currentMove) {
-			description = "You are at move #" + move;
+			if (currentMove === 0 ) {
+				description = "You are at game start";
+			} else {
+				description = `You are at move #${move} - (${coordinates.at(move)})`;
+			}
 		} else if (move > 0) {
-			description = "Go to move #" + move;
+			description = `Go to move #${move} - (${coordinates.at(move)})`;
 		} else {
 			description = "Go to game start";
 		}
