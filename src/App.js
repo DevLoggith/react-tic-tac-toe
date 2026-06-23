@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function Square({ className, value, onSquareClick }) {
 	return (
-		<button className={"square " + className } onClick={onSquareClick}>
+		<button className={"square " + className} onClick={onSquareClick}>
 			{value}
 		</button>
 	);
@@ -44,7 +44,11 @@ function Board({ xIsNext, squares, onPlay }) {
 					return (
 						<Square
 							key={globalIndex}
-							className={winningSquares && winningSquares.includes(globalIndex) ? "winning-squares" : ""}
+							className={
+								winningSquares && winningSquares.includes(globalIndex)
+									? "winning-squares"
+									: ""
+							}
 							value={squares[globalIndex]}
 							onSquareClick={() => handleClick(globalIndex, coordinate)}
 						/>
@@ -87,7 +91,7 @@ export default function Game() {
 		let description;
 
 		if (move === currentMove) {
-			if (currentMove === 0 ) {
+			if (currentMove === 0) {
 				description = "You are at game start";
 			} else {
 				description = `You are at move #${move} - (${coordinates.at(move)})`;
